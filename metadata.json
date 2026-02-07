@@ -1,0 +1,5 @@
+{
+  "name": "Agentic City - Circular Economy Simulation",
+  "description": "An industrial symbiosis simulator where autonomous agents optimize supply chains by matching factory waste to raw material needs in a real-time grid-based city.",
+  "requestFramePermissions": []
+}
