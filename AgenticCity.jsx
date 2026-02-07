@@ -376,7 +376,7 @@ const AgenticCity = () => {
   };
 
   return (
-    <div className="flex h-[calc(100vh-64px)] bg-[#030303] text-neutral-200 overflow-hidden font-sans selection:bg-emerald-500/30">
+    <div className="flex h-full min-h-screen bg-[#030303] text-neutral-200 overflow-hidden font-sans selection:bg-emerald-500/30">
       <div className="flex-1 relative flex items-center justify-center bg-[#020202] overflow-hidden">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           {[...Array(20)].map((_, i) => (
