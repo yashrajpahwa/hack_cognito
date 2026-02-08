@@ -139,7 +139,7 @@ const Marketplace = () => {
   });
 
   return (
-    <div className="min-h-screen p-8 pb-20 overflow-scroll">
+    <div className="h-screen p-8 pb-20 overflow-scroll">
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
