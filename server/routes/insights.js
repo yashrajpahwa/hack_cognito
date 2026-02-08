@@ -45,9 +45,9 @@ function buildMetrics(companies) {
     });
   });
 
-  const sortedMaterials = Object.entries(materialCounts)
-    .sort((a, b) => b[1] - a[1])
-    .map(([material]) => material);
+  const sortedMaterialsWithVolumes = Object.entries(materialCounts)
+    .sort((a, b) => b[1] - a[1]);
+  const sortedMaterials = sortedMaterialsWithVolumes.map(([material]) => material);
 
   const sortedCities = Object.entries(cityCounts)
     .sort((a, b) => b[1] - a[1])
@@ -68,6 +68,10 @@ function buildMetrics(companies) {
     cityCounts,
     topIndustry,
     topMaterials: sortedMaterials.slice(0, 5),
+    topMaterialStats: sortedMaterialsWithVolumes.slice(0, 5).map(([material, volume]) => ({
+      material,
+      volume,
+    })),
     topCities: sortedCities,
     topRiskAppetite,
   };

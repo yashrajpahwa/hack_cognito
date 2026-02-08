@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Sparkles, Globe, Activity, TrendingUp } from "lucide-react";
+import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { API_BASE_URL } from "./config";
 
 const accentClasses = {
@@ -20,8 +21,22 @@ const MetricCard = ({ label, value, detail, icon: Icon, accent }) => (
   </div>
 );
 
+const formatNumber = (value) => (value ? value.toLocaleString() : "0");
+
+const defaultMetrics = {
+  totalCompanies: 0,
+  totalWaste: 0,
+  avgWastePerCompany: 0,
+  topIndustry: "—",
+  topMaterials: [],
+  topCities: [],
+  industryCounts: {},
+  topMaterialStats: [],
+  topRiskAppetite: "balanced",
+};
+
 const Analytics = () => {
-  const [metrics, setMetrics] = useState(null);
+  const [metrics, setMetrics] = useState(defaultMetrics);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -39,7 +54,7 @@ const Analytics = () => {
         }
 
         const data = await res.json();
-        setMetrics(data.metrics);
+        setMetrics({ ...defaultMetrics, ...(data.metrics || {}) });
       } catch (err) {
         if (err.name !== "AbortError") {
           setError(err.message);
@@ -53,6 +68,17 @@ const Analytics = () => {
 
     return () => controller.abort();
   }, []);
+
+  const cityChartData = useMemo(
+    () =>
+      (metrics.topCities || []).map((entry) => ({
+        name: entry.city,
+        value: entry.count,
+      })),
+    [metrics],
+  );
+
+  const topMaterials = metrics.topMaterialStats || [];
 
   if (loading) {
     return (
@@ -75,21 +101,22 @@ const Analytics = () => {
       <div>
         <h1 className="text-3xl font-bold text-white mb-1">Analytics</h1>
         <p className="text-neutral-400 text-sm">
-          Live health metrics driven by the Sell Waste Today dataset.
+          Live health metrics powered directly by the Sell Waste dataset.
         </p>
       </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <MetricCard
           label="Companies"
-          value={metrics.totalCompanies.toLocaleString()}
+          value={formatNumber(metrics.totalCompanies)}
           detail="customer base tracked"
           icon={Globe}
           accent="emerald"
         />
         <MetricCard
           label="Waste volume"
-          value={`${metrics.totalWaste.toLocaleString()}kg`}
-          detail={`≈ ${metrics.avgWastePerCompany.toFixed(0)}kg per company`}
+          value={`${formatNumber(metrics.totalWaste)} kg`}
+          detail={`≈ ${Math.round(metrics.avgWastePerCompany)} kg per company`}
           icon={Activity}
           accent="cyan"
         />
@@ -103,10 +130,49 @@ const Analytics = () => {
         <MetricCard
           label="Popular material"
           value={metrics.topMaterials[0] || "—"}
-          detail="Ranked by quantity"
+          detail="Ranked by volume"
           icon={Sparkles}
           accent="amber"
         />
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
+        <div className="bg-[#0f0f0f] border border-neutral-800 rounded-xl p-6">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-xl font-bold text-white">Top city concentration</h2>
+            <span className="text-xs text-neutral-500">{metrics.topCities.length} cities</span>
+          </div>
+          <div className="h-48">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={cityChartData}>
+                <XAxis dataKey="name" tick={{ fill: "#94a3b8" }} />
+                <YAxis tick={{ fill: "#94a3b8" }} />
+                <Tooltip contentStyle={{ background: "#0f0f0f", borderColor: "#1f2937" }} />
+                <Bar dataKey="value" fill="#34d399" radius={[6, 6, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          <p className="text-xs text-neutral-500 mt-3">
+            Later we can make each city bar clickable to filter marketplace results.
+          </p>
+        </div>
+
+        <div className="space-y-4">
+          {topMaterials.slice(0, 4).map((material) => (
+            <div key={material.material} className="bg-[#0f0f0f] border border-neutral-800 rounded-xl p-4">
+              <div className="flex items-center justify-between text-xs text-neutral-500">
+                <span>{material.material}</span>
+                <span>{formatNumber(Math.round(material.volume))} kg</span>
+              </div>
+              <div className="w-full h-1 mt-2 bg-neutral-800 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-emerald-500 rounded-full"
+                  style={{ width: `${Math.min(100, (material.volume / metrics.totalWaste) * 100 || 0)}%` }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="bg-[#0f0f0f] border border-neutral-800 rounded-xl p-6">
@@ -126,7 +192,10 @@ const Analytics = () => {
         <h2 className="text-xl font-bold text-white">Material Demand</h2>
         <div className="flex flex-wrap gap-3">
           {metrics.topMaterials.map((material) => (
-            <span key={material} className="text-xs text-neutral-200 bg-neutral-900/60 border border-neutral-700 px-3 py-1 rounded-full">
+            <span
+              key={material}
+              className="text-xs text-neutral-200 bg-neutral-900/60 border border-neutral-700 px-3 py-1 rounded-full"
+            >
               {material}
             </span>
           ))}

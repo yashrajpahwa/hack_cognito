@@ -13,13 +13,25 @@ const insightsRouter = require('./routes/insights');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:5173,http://127.0.0.1:5173').split(',').map((origin) => origin.trim());
+const HOST = process.env.HOST || '0.0.0.0';
+
+const configuredOrigins = (process.env.CORS_ORIGINS || 'http://localhost:5173,http://127.0.0.1:5173').split(',').map((origin) => origin.trim()).filter(Boolean);
+
+const isLocalhostOrigin = (origin) => {
+  if (!origin) return false;
+  try {
+    const parsed = new URL(origin);
+    return ['localhost', '127.0.0.1', '0.0.0.0'].includes(parsed.hostname);
+  } catch {
+    return origin.includes('localhost') || origin.includes('127.0.0.1');
+  }
+};
 
 // Middleware
 app.use(express.json());
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin || configuredOrigins.includes(origin) || isLocalhostOrigin(origin)) {
       return callback(null, true);
     }
 
@@ -65,13 +77,13 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, HOST, () => {
   console.log('='.repeat(50));
   console.log('Sell Waste Today API');
   console.log('='.repeat(50));
-  console.log(`Server running on port ${PORT}`);
-  console.log(`Health check: http://localhost:${PORT}/health`);
-  console.log(`API endpoint: POST http://localhost:${PORT}/api/sell-waste-today`);
+  console.log(`Server running on ${HOST}:${PORT}`);
+  console.log(`Health check: http://${HOST}:${PORT}/health`);
+  console.log(`API endpoint: POST http://${HOST}:${PORT}/api/sell-waste-today`);
   console.log('='.repeat(50));
 });
 

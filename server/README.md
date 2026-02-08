@@ -34,6 +34,7 @@ npm install
 
 - Copy `server/.env.example` to `server/.env`.
 - Set `GEMINI_API_KEY` if you want Gemini-powered context/personalization (default deterministic fallbacks do not require it).
+- Set `PORT`/`HOST` if you need to avoid occupied ports (defaults: `3000` + `0.0.0.0`).
 
 ## Running the Server
 
@@ -220,7 +221,7 @@ Response:
 - `GET /api/insights/metrics` – aggregated industry, city, and material stats consumed by the analytics dashboards.
 - `GET /api/insights/companies` – paginated company summaries with calculated waste volume (kg) useful for the data center UI.
 
-Default CORS allowlist: `http://localhost:5173` and `http://127.0.0.1:5173`. Override with `CORS_ORIGINS` (comma-separated) if hosting the UI elsewhere.
+Default CORS allowlist: `http://localhost:5173` and `http://127.0.0.1:5173`, plus any origin whose hostname is `localhost`, `127.0.0.1`, or `0.0.0.0`. Override (or extend) the list with `CORS_ORIGINS` (comma-separated) if you host the UI or another client elsewhere.
 
 ## Extension Points
 
