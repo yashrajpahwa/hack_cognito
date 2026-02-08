@@ -15,7 +15,7 @@ import ProtectedRoute from './ProtectedRoute';
 
 const App = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { user, setUser, setLoading } = useAuthStore();
+  const { user, setUser } = useAuthStore();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {

@@ -30,6 +30,11 @@ This API implements a hollow intelligence system with clear architectural seams:
 npm install
 ```
 
+## Environment
+
+- Copy `server/.env.example` to `server/.env`.
+- Set `GEMINI_API_KEY` if you want Gemini-powered context/personalization (default deterministic fallbacks do not require it).
+
 ## Running the Server
 
 ```bash
@@ -209,6 +214,13 @@ Response:
   "service": "sell-waste-today"
 }
 ```
+
+## Insights Endpoints
+
+- `GET /api/insights/metrics` – aggregated industry, city, and material stats consumed by the analytics dashboards.
+- `GET /api/insights/companies` – paginated company summaries with calculated waste volume (kg) useful for the data center UI.
+
+Default CORS allowlist: `http://localhost:5173` and `http://127.0.0.1:5173`. Override with `CORS_ORIGINS` (comma-separated) if hosting the UI elsewhere.
 
 ## Extension Points
 

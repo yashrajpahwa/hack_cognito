@@ -9,15 +9,23 @@
 const express = require('express');
 const cors = require('cors');
 const sellWasteRouter = require('./routes/sellWaste');
+const insightsRouter = require('./routes/insights');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:5173,http://127.0.0.1:5173').split(',').map((origin) => origin.trim());
 
 // Middleware
 app.use(express.json());
-app.use(cors({ 
-  origin: 'http://localhost:3001',
-  credentials: true 
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true,
 }));
 
 // Request logging middleware
@@ -28,6 +36,7 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/api', sellWasteRouter);
+app.use('/api', insightsRouter);
 
 // Health check endpoint
 app.get('/health', (req, res) => {

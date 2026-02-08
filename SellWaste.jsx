@@ -1,5 +1,8 @@
 ﻿import React, { useState, useEffect } from "react";
 import { Truck, AlertCircle, CheckCircle, Loader, Wifi, WifiOff } from "lucide-react";
+import { API_BASE_URL } from "./config";
+
+const sanitizeBase = (value) => (value.endsWith("/") ? value.slice(0, -1) : value);
 
 const SellWaste = () => {
   const [loading, setLoading] = useState(false);
@@ -19,13 +22,17 @@ const SellWaste = () => {
     }]
   });
 
+  const apiBase = sanitizeBase(API_BASE_URL);
+  const healthEndpoint = `${apiBase}/health`;
+  const apiEndpoint = `${apiBase}/api/sell-waste-today`;
+
   useEffect(() => {
     checkApiHealth();
   }, []);
 
   const checkApiHealth = async () => {
     try {
-      const response = await fetch("http://localhost:3000/health", { method: "GET" });
+      const response = await fetch(healthEndpoint, { method: "GET" });
       setApiConnected(response.ok);
     } catch (err) {
       setApiConnected(false);
@@ -74,7 +81,7 @@ const SellWaste = () => {
     setResult(null);
 
     try {
-      const response = await fetch("http://localhost:3000/api/sell-waste-today", {
+      const response = await fetch(apiEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData)
@@ -92,7 +99,7 @@ const SellWaste = () => {
 
       const text = await response.text();
       if (!text) {
-        throw new Error("API returned empty response. Check if Sell Waste API is running on port 3000.");
+        throw new Error(`API returned empty response. Check if Sell Waste API is running at ${apiBase}.`);
       }
 
       const data = JSON.parse(text);
@@ -132,7 +139,7 @@ const SellWaste = () => {
               <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
               <div>
                 <p className="text-red-200 font-medium mb-2">Sell Waste API is not running</p>
-                <p className="text-red-300 text-sm mb-3">The API backend needs to be running on <code className="bg-red-950 px-2 py-1 rounded">localhost:3000</code> to process waste pickup requests.</p>
+                <p className="text-red-300 text-sm mb-3">The API backend needs to be running at <code className="bg-red-950 px-2 py-1 rounded">{apiBase}</code> to process waste pickup requests.</p>
                 <p className="text-red-300 text-sm">Start the Sell Waste API with:</p>
                 <code className="bg-red-950 px-3 py-2 rounded text-red-200 text-sm block mt-2">npm install && npm start</code>
               </div>
