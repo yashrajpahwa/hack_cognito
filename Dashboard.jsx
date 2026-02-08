@@ -204,7 +204,7 @@ const Dashboard = () => {
                 </span>
               </div>
             </div>
-            <h3 className="text-3xl font-black text-white mb-1">\M</h3>
+            <h3 className="text-3xl font-black text-white mb-1">0.2M</h3>
             <p className="text-sm text-neutral-400">Profit Increase (30d)</p>
           </div>
         </div>
