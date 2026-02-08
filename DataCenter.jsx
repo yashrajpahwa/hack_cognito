@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Database, MapPin, Factory } from "lucide-react";
+import { Database, MapPin } from "lucide-react";
 import { API_BASE_URL } from "./config";
 
 const DataCenter = () => {

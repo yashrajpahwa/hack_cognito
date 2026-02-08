@@ -215,6 +215,13 @@ Response:
 }
 ```
 
+## Insights Endpoints
+
+- `GET /api/insights/metrics` – aggregated industry, city, and material stats consumed by the analytics dashboards.
+- `GET /api/insights/companies` – paginated company summaries with calculated waste volume (kg) useful for the data center UI.
+
+Default CORS allowlist: `http://localhost:5173` and `http://127.0.0.1:5173`. Override with `CORS_ORIGINS` (comma-separated) if hosting the UI elsewhere.
+
 ## Extension Points
 
 Each service file contains TODO comments marking where LLMs and optimization engines will be integrated:
