@@ -30,6 +30,11 @@ This API implements a hollow intelligence system with clear architectural seams:
 npm install
 ```
 
+## Environment
+
+- Copy `server/.env.example` to `server/.env`.
+- Set `GEMINI_API_KEY` if you want Gemini-powered context/personalization (default deterministic fallbacks do not require it).
+
 ## Running the Server
 
 ```bash

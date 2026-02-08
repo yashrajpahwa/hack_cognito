@@ -7,6 +7,10 @@ import AgenticCity from './AgenticCity';
 import Marketplace from './Marketplace';
 import SellWaste from './SellWaste';
 import Settings from './Settings';
+import Analytics from './Analytics';
+import DataCenter from './DataCenter';
+import Partners from './Partners';
+import Reports from './Reports';
 
 const App = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -62,30 +66,10 @@ const App = () => {
               <Route path="/marketplace" element={<Marketplace />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/sell-waste" element={<SellWaste />} />
-              <Route path="/analytics" element={
-                <div className="p-8">
-                  <h1 className="text-3xl font-bold text-white mb-2">Analytics</h1>
-                  <p className="text-neutral-400">Advanced analytics and reporting coming soon...</p>
-                </div>
-              } />
-              <Route path="/data" element={
-                <div className="p-8">
-                  <h1 className="text-3xl font-bold text-white mb-2">Data Center</h1>
-                  <p className="text-neutral-400">Data management and visualization coming soon...</p>
-                </div>
-              } />
-              <Route path="/partners" element={
-                <div className="p-8">
-                  <h1 className="text-3xl font-bold text-white mb-2">Partners</h1>
-                  <p className="text-neutral-400">Partner management coming soon...</p>
-                </div>
-              } />
-              <Route path="/reports" element={
-                <div className="p-8">
-                  <h1 className="text-3xl font-bold text-white mb-2">Reports</h1>
-                  <p className="text-neutral-400">Report generation coming soon...</p>
-                </div>
-              } />
+              <Route path="/analytics" element={<Analytics />} />
+              <Route path="/data" element={<DataCenter />} />
+              <Route path="/partners" element={<Partners />} />
+              <Route path="/reports" element={<Reports />} />
             </Routes>
           </main>
         </div>

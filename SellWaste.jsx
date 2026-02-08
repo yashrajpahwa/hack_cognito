@@ -1,5 +1,6 @@
 ﻿import React, { useState, useEffect } from "react";
 import { Truck, AlertCircle, CheckCircle, Loader, Wifi, WifiOff } from "lucide-react";
+import { API_BASE_URL } from "./config";
 
 const SellWaste = () => {
   const [loading, setLoading] = useState(false);
@@ -25,7 +26,7 @@ const SellWaste = () => {
 
   const checkApiHealth = async () => {
     try {
-      const response = await fetch("http://localhost:3000/health", { method: "GET" });
+      const response = await fetch(`${API_BASE_URL}/health`, { method: "GET" });
       setApiConnected(response.ok);
     } catch (err) {
       setApiConnected(false);
@@ -74,7 +75,7 @@ const SellWaste = () => {
     setResult(null);
 
     try {
-      const response = await fetch("http://localhost:3000/api/sell-waste-today", {
+      const response = await fetch(`${API_BASE_URL}/api/sell-waste-today`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData)
